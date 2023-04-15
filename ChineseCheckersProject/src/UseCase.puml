@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+HumanPlayer -> (Play game)
+
+note left of (HumanPlayer)
+The human player plays the "Chinese Checkers"
+game and tries to beat the AI that plays against him.
+end note
+
+note "Include" as includeN
+note "Extend" as extendN
+
+(Play game) .. includeN
+(Play game) .. extendN
+includeN .. (Choose playing mode)
+extendN .. (Restart game)
+includeN .. (Execute turn)
+@enduml

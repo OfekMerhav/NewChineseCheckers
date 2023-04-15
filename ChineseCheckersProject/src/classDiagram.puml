@@ -1,0 +1,161 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class AiBot{
++gameModel:Model
++board:GameBoard
++AiBot(Model Game_Model)
++startAi(int Depth,int TurnCount,double Alpha,double Beta):CoordinateMove
+-evaluateBoard():double
++greenPlayerDistance():double
+-redPlayerDistance():double
+-buildMapCopy(HashMap tools):HashMap
+}
+class Model{
++board:GameBoard
++aiBot:AiBot
++Model()
++selectTool(Coordinate Selected_Coordinate):void
++makeTurn(Coordinate Selected_Coordinate):void
++getSelectedCor(double clicked_x, double clicked_y):Coordinate
++getSelectedPossibleCor(double Mouse_X, double Mouse_Y):Coordinate
++updatePossibleMoves():void
++setPossiblePass(List<Coordinate> poss_coordinates, Coordinate possible_move, boolean first_time, double jump_number):void
++isLegalMove(Coordinate possible_move):boolean
++isClosestInAxis(Coordinate selected_tool, Coordinate coordinate, direction relative_direction):boolean
++checkForWin():boolean
++initBoard():void
++getBoard():GameBoard
++clearPossibleMoves():void
++getPossibleMoves():LinkedList<Coordinate>
+}
+class GameBoard{
+-redPlayer, greenPlayer:Player
+-currentPlayer:Players
+-directions:Directions
++GameBoard()
++switchPlayer():void
++isInBoardBounds(Coordinate coordinate):boolean
++getRedPlayer():Player
++setRedPlayer(Player red_player):void
++getGreenPlayer():Player
++setGreenPlayer(Player green_Player):void
++getCurrentPlayer():Players
++getCurrentPlayerPlayer():Player
++setCurrentPlayer(Players currentPlayer):void
++getDirections():Directions
+}
+class Player{
+-playerColor:Color
++HashMap<Coordinate,HexNode> playerTools
+-selectedTool:Coordinate
++Player(Color player_color)
++clearVisitedTools():void
++containsTool(Coordinate possible_move):boolean
++getPlayerColor():Color
++setPlayerColor(Color playerColor):void
++getPlayerTools():HashMap<Coordinate, HexNode>
++setPlayerTools(HashMap<Coordinate, HexNode> playerTools):void
++getSelectedTool():Coordinate
++setSelectedTool(Coordinate selectedTool):void
+}
+enum Players
+{
+ RED_PLAYER
+ GREEN_PLAYER
+}
+class Directions{
+-directionsValues:List<Coordinate>
++Directions()
++getDirection(direction direction):Coordinate
+}
+class Coordinate{
+-x, y, z:int
+-isVisited:boolean
+}
+class HexNode{
+-Color playerColor
++HexNode(Color playerColor)
++getPlayerColor():Color
+}
+class Presenter{
++gameModel:Model
++surface:ISurface
++Presenter(Surface surface)
++initBoard():void
++makeTurn(double mouseX, double mouseY):boolean
++activateBot():void
++getBoard():GameBoard
++getPossibleMoves():LinkedList<Coordinate>
+}
+class Surface{
+-BOARD_BACKGROUND:String
+-image:BufferedImage
+-presenter:IPresenter
+-board:GameBoard
+-possible_moves:LinkedList<Coordinate>
++Surface()
++draw(Graphics g):void
++paintComponent(Graphics g):void
++mouseClicked(MouseEvent e):void
++actionPerformed(ActionEvent e):void
+}
+interface IPresenter
+{
+getBoard():GameBoard
+getPossibleMoves():LinkedList<Coordinate>
+makeTurn(double mouseX, double mouseY):boolean
+initBoard():void
+activateBot():void
+}
+interface ISurface
+{
+ draw(Graphics g):void
+}
+class CoordinateMove
+{
++start_move_Coordinate:Coordinate
++to_move_Coordinate:Coordinate
++CoordinateMove(double Score)
++CoordinateMove(Coordinate startMoveCoordinate, Coordinate To_move_Coordinate, double Score)
+}
+class App
+{
++SCREEN_SIZE
++BOARD_RADIUS
++HEX_DIAMETER
++PIECE_DIAMETER
++PIECE_RADIUS
++TOOLS_DISTANCE
++App()
++initScreen():void
++main(String[] args):void
+}
+enum direction {
+  DOWN_LEFT,
+  LEFT,
+  UPPER_LEFT,
+  UPPER_RIGHT,
+  RIGHT,
+  DOWN_RIGHT,
+  NONE
+}
+'Connections
+App *-- Surface
+direction *-- GameBoard
+AiBot o--* Model
+AiBot o-- GameBoard
+GameBoard --* Model
+GameBoard *-- Player
+GameBoard o-- Players
+GameBoard *-- Directions
+Player o-- Coordinate
+Player *-- HexNode
+Presenter *-- Model
+Presenter --|> IPresenter
+Presenter o-- Surface
+Surface o-- IPresenter
+Surface --|> ISurface
+CoordinateMove o-- Coordinate
+CoordinateMove <-- AiBot
+@enduml
